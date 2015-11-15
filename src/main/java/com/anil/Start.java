@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component("Start")
 public class Start {
@@ -23,9 +24,15 @@ public class Start {
 		context.close();
 	}
 	
+	@Transactional
 	public void methodInStart(ApplicationContext context) {
 		PersonDAO dao = (PersonDAO) context.getBean("PersonDAO");
-		Person p = dao.getPersonById(1);
-		logger.debug(p.getAge() + " " + p.getEmai());
+		int id = 2;
+		if(id == 1) {			
+			Person p = dao.getPersonById(1);
+			logger.debug(p.getAge() + " " + p.getEmai());
+		} else {			
+			throw new RuntimeException();
+		}
 	}
 }
