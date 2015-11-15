@@ -27,7 +27,7 @@ public class Start {
 	@Transactional
 	public void methodInStart(ApplicationContext context) {
 		PersonDAO dao = (PersonDAO) context.getBean("PersonDAO");
-		int id = 2;
+		int id = 1;
 		if(id == 1) {			
 			Person p = dao.getPersonById(1);
 			logger.debug(p.getAge() + " " + p.getEmai());

@@ -7,14 +7,20 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository("PersonDAO")
 public class PersonDAO {
 
-	@Autowired
+	//One way to autowire bean by ID
+	@Autowired @Qualifier("dataSourcePool")
 	private DataSource dataSource;
+	
+	Logger logger = LoggerFactory.getLogger(PersonDAO.class);
 	
 	public Person getPersonById(int id) {
 		Person toReturn = null;
@@ -33,13 +39,14 @@ public class PersonDAO {
 			rs.close();
 			statement.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (con != null) {
 				try {
 					con.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+					logger.error("Exception while closing the connection " + e.getMessage());
+				}
 			}
 		}
 		return toReturn;

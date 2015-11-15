@@ -11,15 +11,31 @@
 	<context:component-scan base-package="com.anil"></context:component-scan>
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSourcePool" />
 	</bean>
 	
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-
+	<!-- Single datasource 
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/sample" />
 		<property name="username" value="root" />
 		<property name="password" value="toor" />
-	</bean>
+	</bean>-->
+	
+	<!-- Pooled datasource. For this you can use either Apache commons DBCP or C3P0. Here i am using Apache Commons DBCP -->
+	<bean id="dataSourcePool" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/sample?autoReconnect=true" />
+		<property name="username" value="root" />
+		<property name="password" value="toor" />
+		<property name="initialSize" value="5" />
+		<property name="validationQuery" value="select 1" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="maxActive" value="10" />
+		<property name="maxIdle" value="10" />
+		<property name="maxWait" value="15000" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="300" />
+		<property name="testOnBorrow" value="true" />
+	</bean> 
 </beans>
