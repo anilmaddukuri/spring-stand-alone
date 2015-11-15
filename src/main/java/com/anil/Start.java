@@ -5,6 +5,7 @@ package com.anil;
 import org.apache.commons.logging.LogFactory;*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +19,13 @@ public class Start {
 		MyBean bean = (MyBean) context.getBean("MyBean");
 		bean.myMethod();
 		Start start = (Start) context.getBean("Start");
-		start.methodInStart();
+		start.methodInStart(context);
 		context.close();
 	}
 	
-	public void methodInStart() {
-		logger.error("method in start class called - error");
-		logger.debug("debug");
+	public void methodInStart(ApplicationContext context) {
+		PersonDAO dao = (PersonDAO) context.getBean("PersonDAO");
+		Person p = dao.getPersonById(1);
+		logger.debug(p.getAge() + " " + p.getEmai());
 	}
 }
